@@ -15,6 +15,7 @@ using Notung.Services;
 using Schicksal.Anova;
 using Schicksal.Basic;
 using Schicksal.Exchange;
+using Schicksal.Helm.analyze;
 using Schicksal.Helm.Dialogs;
 using Schicksal.Helm.Properties;
 using Schicksal.Regression;
@@ -483,5 +484,35 @@ namespace Schicksal.Helm
         }
       }
     }
-  }
+
+        private void Basic_Click(object sender, EventArgs e)
+        {
+            var table_form = this.ActiveMdiChild as TableForm;
+
+            if (table_form == null)
+                return;
+
+            var table = table_form.DataSource;
+
+            if (table == null)
+                return;
+
+            var service = new BaseStatistic();
+            var dlg = service.BindDialog(table);
+
+            if (dlg.ShowDialog(this) == DialogResult.OK)
+            {
+                var processor = service.GetProcessor(table);
+
+                if (service.IsRun(processor))
+                {
+                    service.SaveData();
+                    var results_form = service.BindTheResultForm(processor, table_form);
+                    results_form.Show(this);
+                }
+            }
+           
+        }
+
+    }
 }
