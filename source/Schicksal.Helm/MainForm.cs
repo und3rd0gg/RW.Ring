@@ -507,12 +507,12 @@ namespace Schicksal.Helm
 
             if (dialog.ShowDialog(this) == DialogResult.OK)
             {
-                var processor = service.GetProcessor(table, dialog);//?
+                var processor = service.GetProcessor(table, dialog.DataSource);
 
                 if (AppManager.OperationLauncher.Run(processor, service.GetLaunchParameters()) == TaskStatus.RanToCompletion)
                 {
                     dialog.DataSource.Save(settings);
-                    service.BindTheResultForm(processor, table_form, dialog);//?
+                    service.BindTheResultForm(processor, table_form, dialog.DataSource);
                 }
             }
         }

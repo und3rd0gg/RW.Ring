@@ -15,16 +15,18 @@ namespace Schicksal.Helm.analyze
         {
             return Resources.BASIC_STATISTICS;
         }
+
         public Dictionary<string, string[]> GetSettings()
         {
             return AppManager.Configurator.GetSection<Program.Preferences>().BaseStatSettings;
         }
 
-        public RunBase GetProcessor(DataTable table, StatisticsParametersDialog dialog)
+        public RunBase GetProcessor(DataTable table, AnovaDialogData data)
         {
-            return new DescriptionStatisticsCalculator(table, dialog.DataSource.Predictors.ToArray(),
-                    dialog.DataSource.Result, dialog.DataSource.Filter, dialog.DataSource.Probability);
+            return new DescriptionStatisticsCalculator(table, data.Predictors.ToArray(),
+                   data.Result, data.Filter, data.Probability);
         }
+
         public LaunchParameters GetLaunchParameters()
         {
             return new LaunchParameters
@@ -34,16 +36,16 @@ namespace Schicksal.Helm.analyze
             };
         }
 
-        public void BindTheResultForm(RunBase processor, object table_form, StatisticsParametersDialog dialog)
+        public void BindTheResultForm(RunBase processor, object table_form, AnovaDialogData data)
         {
             var results_form = new BasicStatisticsForm();
             var currentProcessor = (DescriptionStatisticsCalculator)processor;
             results_form.Text = string.Format("{0}: {1}, p={2}; {3}",
                 Resources.BASIC_STATISTICS, table_form.GetType().GetProperty("Text").GetValue(table_form, null),
-                dialog.DataSource.Probability, dialog.DataSource.Filter);
+                data.Probability, data.Filter);
             results_form.DataSorce = currentProcessor.Result;
             results_form.Factors = currentProcessor.Factors;
-            results_form.ResultColumn = dialog.DataSource.Result;
+            results_form.ResultColumn = data.Result;
             results_form.Show();
         }
     }
