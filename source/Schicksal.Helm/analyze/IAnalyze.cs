@@ -13,10 +13,10 @@ namespace Schicksal.Helm.analyze
 {
     public interface IAnalyze
     {
-        Dictionary<string, string[]> BindDialog(DataTable table, StatisticsParametersDialog dialog);
+        string GetText();
+        Dictionary<string, string[]> GetSettings();
         RunBase GetProcessor(DataTable table, StatisticsParametersDialog dialog);
         LaunchParameters GetLaunchParameters();
-        void SaveData(StatisticsParametersDialog dialog);
         void BindTheResultForm(RunBase processor, object table_form, StatisticsParametersDialog dialog);
     }
 }
