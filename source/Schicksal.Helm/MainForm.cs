@@ -485,37 +485,37 @@ namespace Schicksal.Helm
       }
     }
 
-        private void Basic_Click(object sender, EventArgs e)
+    private void Basic_Click(object sender, EventArgs e)
+    {
+        var table_form = this.ActiveMdiChild as TableForm;
+
+        if (table_form == null)
+            return;
+
+        var table = table_form.DataSource;
+
+        if (table == null)
+            return;
+
+        var service = new BaseStatistic();
+
+        using (var dialog = new StatisticsParametersDialog())
         {
-            var table_form = this.ActiveMdiChild as TableForm;
+            dialog.Text = service.GetText();
+            dialog.DataSource = new AnovaDialogData(table, service.GetSettings());
 
-            if (table_form == null)
-                return;
-
-            var table = table_form.DataSource;
-
-            if (table == null)
-                return;
-
-            var service = new BaseStatistic();
-
-            using (var dialog = new StatisticsParametersDialog())
+            if (dialog.ShowDialog(this) == DialogResult.OK)
             {
-                var settings = service.BindDialog(table, dialog);
-                dialog.DataSource = new AnovaDialogData(table, settings);
+                var processor = service.GetProcessor(table, dialog);//?
 
-                if (dialog.ShowDialog(this) == DialogResult.OK)
+                if (AppManager.OperationLauncher.Run(processor, service.GetLaunchParameters()) == TaskStatus.RanToCompletion)
                 {
-                    var processor = service.GetProcessor(table, dialog);
-
-                    if (AppManager.OperationLauncher.Run(processor, service.GetLaunchParameters()) == TaskStatus.RanToCompletion)
-                    {
-                        service.SaveData(dialog);
-                        service.BindTheResultForm(processor, table_form, dialog);
-                    }
+                    service.SaveData(dialog);
+                    service.BindTheResultForm(processor, table_form, dialog);
                 }
             }
         }
+    }
 
     }
 }

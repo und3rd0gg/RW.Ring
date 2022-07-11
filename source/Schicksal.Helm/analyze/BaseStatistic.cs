@@ -11,10 +11,12 @@ namespace Schicksal.Helm.analyze
 {
     public class BaseStatistic : IAnalyze
     {
-
-        public Dictionary<string, string[]> BindDialog(DataTable table, StatisticsParametersDialog dialog)
+        public string GetText()
         {
-            dialog.Text = Resources.BASIC_STATISTICS;
+            return Resources.BASIC_STATISTICS;
+        }
+        public Dictionary<string, string[]> GetSettings()
+        {
             return AppManager.Configurator.GetSection<Program.Preferences>().BaseStatSettings;
         }
 
