@@ -503,7 +503,7 @@ namespace Schicksal.Helm
         {
             dialog.Text = service.GetText();
             var settings = service.GetSettings();
-            dialog.DataSource = new AnovaDialogData(table, service.GetSettings());
+            dialog.DataSource = new AnovaDialogData(table, settings);
 
             if (dialog.ShowDialog(this) == DialogResult.OK)
             {
