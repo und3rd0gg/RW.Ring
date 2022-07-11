@@ -498,20 +498,23 @@ namespace Schicksal.Helm
                 return;
 
             var service = new BaseStatistic();
-            var dlg = service.BindDialog(table);
 
-            if (dlg.ShowDialog(this) == DialogResult.OK)
+            using (var dialog = new StatisticsParametersDialog())
             {
-                var processor = service.GetProcessor(table);
+                var settings = service.BindDialog(table, dialog);
+                dialog.DataSource = new AnovaDialogData(table, settings);
 
-                if (service.IsRun(processor))
+                if (dialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    service.SaveData();
-                    var results_form = service.BindTheResultForm(processor, table_form);
-                    results_form.Show(this);
+                    var processor = service.GetProcessor(table, dialog);
+
+                    if (AppManager.OperationLauncher.Run(processor, service.GetLaunchParameters()) == TaskStatus.RanToCompletion)
+                    {
+                        service.SaveData(dialog);
+                        service.BindTheResultForm(processor, table_form, dialog);
+                    }
                 }
             }
-           
         }
 
     }
