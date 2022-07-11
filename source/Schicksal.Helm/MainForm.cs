@@ -502,6 +502,7 @@ namespace Schicksal.Helm
         using (var dialog = new StatisticsParametersDialog())
         {
             dialog.Text = service.GetText();
+            var settings = service.GetSettings();
             dialog.DataSource = new AnovaDialogData(table, service.GetSettings());
 
             if (dialog.ShowDialog(this) == DialogResult.OK)
@@ -510,8 +511,8 @@ namespace Schicksal.Helm
 
                 if (AppManager.OperationLauncher.Run(processor, service.GetLaunchParameters()) == TaskStatus.RanToCompletion)
                 {
-                    service.SaveData(dialog);
-                    service.BindTheResultForm(processor, table_form, dialog);
+                    dialog.DataSource.Save(settings);
+                    service.BindTheResultForm(processor, table_form, dialog);//?
                 }
             }
         }

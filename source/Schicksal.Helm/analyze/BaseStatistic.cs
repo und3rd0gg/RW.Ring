@@ -34,11 +34,6 @@ namespace Schicksal.Helm.analyze
             };
         }
 
-        public void SaveData(StatisticsParametersDialog dialog)
-        {
-            dialog.DataSource.Save(AppManager.Configurator.GetSection<Program.Preferences>().BaseStatSettings);
-        }
-
         public void BindTheResultForm(RunBase processor, object table_form, StatisticsParametersDialog dialog)
         {
             var results_form = new BasicStatisticsForm();
